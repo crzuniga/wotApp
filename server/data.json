@@ -1,0 +1,87 @@
+{
+	"id": "wod_123456",
+	"date": 1525450836918,
+	"name": "My Workout",
+	"total_laps": "2",
+	"lap_rest": "15",
+	"status": "",
+	"laps": [
+		{
+			"exercises": [
+				{
+					"id": "wup_123461234",
+					"name": "WarmUp",
+					"time": "10",
+					"url": "",
+					"finished": "false",
+					"lap": "1",
+					"warmup":true
+				},
+				{
+					"id": "wrest_123461234",
+					"name": "Rest",
+					"time": "10",
+					"url": "",
+					"finished": "false",
+					"lap": "1",
+					"warmup":true
+				},
+				{
+					"id": "ex_123461234",
+					"name": "Burpees",
+					"time": "10",
+					"url": "",
+					"finished": "false",
+					"lap": "1"
+				},
+				{
+					"id": "rest_123461234",
+					"ex_id": "ex_123461234",
+					"name": "Rest",
+					"url": "",
+					"time": "10",
+					"finished": "false",
+					"lap": "1"
+				},
+				{
+					"id": "ex_465798631",
+					"name": "Bicep curls",
+					"url": "",
+					"time": "10",
+					"finished": "false",
+					"lap": "1"
+				},
+				{
+					"id": "rest_123461234",
+					"ex_id": "ex_123461234",
+					"name": "Rest",
+					"url": "",
+					"time": "10",
+					"finished": "false",
+					"lap": "1"
+				}
+			]
+		},
+		{
+			"exercises": [
+				{
+					"id": "ex_478965413",
+					"name": "Push ups",
+					"url": "",
+					"time": "15",
+					"finished": "false",
+					"lap": "2"
+				},
+				{
+					"id": "rest_123461234",
+					"ex_id": "ex_478965413",
+					"name": "Rest",
+					"url": "",
+					"time": "10",
+					"finished": "false",
+					"lap": "2"
+				}
+			]
+		}
+	]
+}
