@@ -6,7 +6,7 @@ This application has been created to create, edit and track your workouts
 You can clone the project using the following command
 
 ```
-git clone https://git.github.com/myrepo.git
+git clone git@github.com:crzuniga/wotApp.git
 ```
 
 
@@ -19,7 +19,7 @@ https://nodejs.org/es/download/
 
 ### Installing
 
-You need open the folder where the project was cloned and execute the following commands in terminal:
+You need to open the folder where the project was cloned and execute the following commands in terminal:
 
 ```
 npm install
