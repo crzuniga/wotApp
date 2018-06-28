@@ -1,5 +1,5 @@
 import React from 'react'
-import { updateWorkout, getWorkout } from './../actions/actions.js'
+import { updateWorkout, getWorkout, getTotalExercisesList, removeAndUpdateList } from './../utils/utils.js'
 import logo from "./../images/trash.png"
 import plus from "./../images/plus.png"
 import minus from "./../images/minus.png"
@@ -8,7 +8,10 @@ import ok from "./../images/check.png"
 import warmup from "./../images/warmup.png"
 
 var localLaps = []
-var wupCount = 0
+var localWarmup = {
+  "exercises": []
+}
+
 
 export class EditForm extends React.Component {
   constructor(props) {
@@ -21,11 +24,12 @@ export class EditForm extends React.Component {
       exerciseRest: '',
       exerciseName: '',
       lapNumber: '',
-      exercisesList: {},
-      options: ["1"],
+      options: [],
       laps: [],
       isWarmup: false,
       isWod: true,
+      saveDisabled: true,
+      addDisabled: true,
       saved: false
     }
     this.handleChange = this.handleChange.bind(this)
@@ -42,11 +46,14 @@ export class EditForm extends React.Component {
       .then(res => {
         const data = res[0]
         console.log(data)
+        localLaps = data.laps
+        localWarmup = data.warmup
+        let tempList = getTotalExercisesList(data.warmup, data.laps)
         this.setState({
           workoutName: data.name,
           workoutRest: data.lap_rest,
           totalLaps: data.total_laps,
-          laps: data.laps
+          laps: tempList
         })
 
       })
@@ -72,9 +79,26 @@ export class EditForm extends React.Component {
         })
         break;
       default:
+        if (
+          this.state.workoutName !== '' &&
+          this.state.workoutRest !== '' &&
+          this.state.totalLaps > 0
+        ) {
+          partialState['saveDisabled'] = false
+        }
+
+        if (
+          this.state.exerciseName !== '' &&
+          this.state.exerciseTime !== '' &&
+          this.state.exerciseRest !== ''
+        ) {
+          partialState['addDisabled'] = false
+        }
+
         this.setState(partialState)
         break;
     }
+
 
   }
 
@@ -93,11 +117,15 @@ export class EditForm extends React.Component {
   }
 
   _fillData(event) {
+    
     let numbers = () => {
       let x = []
+      if(this.state.isWarmup){
+        x.push(0)
+      }else{
       for (var i = 1; i <= this.state.totalLaps; i++) {
         x.push(i)
-      }
+      }}
       return x
     }
     this.setState({
@@ -105,8 +133,6 @@ export class EditForm extends React.Component {
       lapNumber: event.target.value
     })
   }
-
-
   _saveWorkout() {
     let wot = {
       "id": this.props.id,
@@ -114,8 +140,8 @@ export class EditForm extends React.Component {
       "name": this.state.workoutName,
       "total_laps": this.state.totalLaps,
       "lap_rest": this.state.workoutRest,
-      "status":"",
-      "laps": this.state.laps
+      "warmup": localWarmup,
+      "laps": localLaps
     }
     console.log(JSON.stringify(wot))
     updateWorkout(wot)
@@ -126,20 +152,20 @@ export class EditForm extends React.Component {
   }
 
   _addExercise() {
-    console.log(this.state.exerciseName)
-    if(
-      this.state.exerciseName!==undefined &&
-      this.state.exerciseTime!==undefined &&
-      this.state.exerciseRest!==undefined 
-    ){
+
+    if (
+      this.state.exerciseName !== '' &&
+      this.state.exerciseTime !== '' &&
+      this.state.exerciseRest !== '' &&
+      this.state.lapNumber !== ''
+    ) {
       let ex = {
         "id": this.state.isWod ? "ex_" + Date.now() : "wup_" + Date.now(),
         "name": this.state.exerciseName,
         "time": this.state.exerciseTime,
         "url": this.state.url,
         "finished": "false",
-        "lap": this.state.isWod ? this.state.lapNumber : 1,
-        "warmup": this.state.isWarmup ? true : false
+        "lap": this.state.isWod ? this.state.lapNumber : 0
       }
       let rest = {
         "id": this.state.isWod ? "rest_" + Date.now() : "wrest_" + Date.now(),
@@ -147,87 +173,62 @@ export class EditForm extends React.Component {
         "time": this.state.exerciseRest,
         "url": "",
         "finished": "false",
-        "lap": this.state.isWod ? this.state.lapNumber : 1
+        "lap": this.state.isWod ? this.state.lapNumber : 0
       }
-  
-      switch (Object.keys(localLaps).length) {
-  
-        case 0:
-          let lap = {
-            "exercises": [ex, rest]
-          }
-          localLaps.push(lap)
-          wupCount = this.state.isWarmup ? wupCount + 2 : wupCount
-  
-          break;
-  
-        default:
-          let lapExist = localLaps.map((value, index) => {
-            console.log(this.state.lapNumber)
-            return (index + 1).toString() === this.state.lapNumber ? true : false
-          })
-  
-          console.log(lapExist)
-          if (lapExist.find((value) => {
-            return value === true
-          })) {
-            let data = localLaps
-            if (this.state.isWarmup) {
-              localLaps[0].exercises.splice(wupCount, 0, ex)
-              localLaps[0].exercises.splice(wupCount + 1, 0, rest)
-  
-              wupCount += 2
-            } else {
+
+      if (this.state.isWarmup) {
+        localWarmup.exercises.push(ex, rest)
+      } else {
+        switch (Object.keys(localLaps).length) {
+          case 0:
+            let lap = {
+              "exercises": [ex, rest]
+            }
+            localLaps.push(lap)
+            break;
+          default:
+            let lapExist = localLaps.map((value, index) => {
+              return (index + 1).toString() === this.state.lapNumber ? true : false
+            })
+            if (lapExist.find((value) => {
+              return value === true
+            })) {
+              let data = localLaps
               data.map((value, index) => {
                 if ((index + 1).toString() === this.state.lapNumber) {
                   localLaps[index].exercises.push(ex, rest)
                 }
                 return "Done"
               })
-            }
-          } else {
-            if (this.state.isWarmup) {
-              localLaps[0].exercises.splice(wupCount, 0, ex)
-              localLaps[0].exercises.splice(wupCount + 1, 0, rest)
-  
-              wupCount += 2
             } else {
               let lap = {
                 "exercises": [ex, rest]
               }
               localLaps.push(lap)
             }
-  
-          }
-          break;
+            break;
+        }
       }
-  
-      console.log(localLaps)
-  
+
+      let tempList = getTotalExercisesList(localWarmup, localLaps)
+
       this.setState({
-        laps: localLaps
+        laps: tempList
       })
     }
+
   }
 
   _removeExercise(exId) {
-    let data = localLaps
-    data.forEach((lap, lapIndex) => {
-      lap.exercises.forEach((exercise, index) => {
-        if (exercise.id === exId) {
-          localLaps[lapIndex].exercises.splice(index, 1)
-        }
-      })
-    })
+    let [updatedWarmup, UpdatedLaps] = removeAndUpdateList(exId, localWarmup, localLaps)
+    localWarmup = updatedWarmup
+    localLaps = UpdatedLaps
+    let tempList = getTotalExercisesList(updatedWarmup, UpdatedLaps)
 
-    let tempLaps = localLaps.filter((lap)=>{
-      return Object.keys(lap.exercises).length>0
-      })
-    localLaps = tempLaps
-    
     this.setState({
-      laps: localLaps
+      laps: tempList
     })
+    
   }
 
   render() {
@@ -235,7 +236,7 @@ export class EditForm extends React.Component {
       return (
         <div className="text-xs-center">
           <h1 className="display-5">Workout has been saved!
-          <img alt='ok' src={ok} />
+        <img alt='ok' src={ok} />
           </h1>
         </div>
       )
@@ -373,6 +374,7 @@ export class EditForm extends React.Component {
                   value={this.state.lapNumber}
                   onChange={this.handleChange}
                   onClick={this._fillData} >
+                  <option value="" disabled>Select lap</option>
                   {this.state.options.map((value) => (
                     <option value={value} key={value}> {value} </option>
                   ))}
@@ -386,6 +388,7 @@ export class EditForm extends React.Component {
                 <div className="col-md-3">
                   <button className="btn btn-primary"
                     type="button"
+                    disabled={this.state.addDisabled}
                     onClick={this._addExercise}>
                     + Add Exercise
                     </button>
@@ -393,6 +396,7 @@ export class EditForm extends React.Component {
                 <div className="col-md-3">
                   <button className="btn btn-primary"
                     type='button'
+                    disabled={this.state.saveDisabled}
                     onClick={this._saveWorkout} >
                     Save Workout
                   </button>
@@ -412,8 +416,7 @@ export class EditForm extends React.Component {
                 </thead>
                 <tbody>
                   {
-                    this.state.laps.map((lap, index) => (
-                      lap.exercises.map((exercise, index) => (
+                    this.state.laps.map((exercise, index) => (
                         <tr key={exercise.id}>
                           <th scope="row">
                             {exercise.name}
@@ -427,8 +430,8 @@ export class EditForm extends React.Component {
                             </a>
                           </td>
                         </tr>
-                      ))
-                    ))}
+                    ))
+                    }
                 </tbody>
               </table>
             </div>

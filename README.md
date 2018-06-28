@@ -8,6 +8,11 @@ You can clone the project using the following command
 ```
 git clone git@github.com:crzuniga/wotApp.git
 ```
+or
+
+```
+git clone https://github.com/crzuniga/wotApp.git
+```
 
 
 ### Prerequisites

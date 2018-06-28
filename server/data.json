@@ -5,27 +5,28 @@
 	"total_laps": "2",
 	"lap_rest": "15",
 	"status": "",
+	"warmup":{
+		"exercises":[
+			{
+			"id": "wup_123461234",
+			"name": "WarmUp",
+			"time": "10",
+			"url": "",
+			"finished": "false",
+			"lap": "0"
+		},
+		{
+			"id": "wrest_123461234",
+			"name": "Rest",
+			"time": "10",
+			"url": "",
+			"finished": "false",
+			"lap": "0"
+		}]
+	},
 	"laps": [
 		{
 			"exercises": [
-				{
-					"id": "wup_123461234",
-					"name": "WarmUp",
-					"time": "10",
-					"url": "",
-					"finished": "false",
-					"lap": "1",
-					"warmup":true
-				},
-				{
-					"id": "wrest_123461234",
-					"name": "Rest",
-					"time": "10",
-					"url": "",
-					"finished": "false",
-					"lap": "1",
-					"warmup":true
-				},
 				{
 					"id": "ex_123461234",
 					"name": "Burpees",

@@ -1,6 +1,6 @@
 import React from 'react';
-import { getAllWorkouts } from './../actions/actions'
-import edit from './../images/edit.png'
+import { getAllWorkouts } from './../utils/utils'
+import { WorkoutList } from './WorkoutList';
 
 export default class MyWorkouts extends React.Component {
     constructor() {
@@ -56,29 +56,7 @@ export default class MyWorkouts extends React.Component {
                     </a>
                 </div>
             </div>
-            <table className='table'>
-                <thead >
-                    <tr>
-                        <th scope="col">Workout Name</th>
-                        <th scope="col">Laps</th>
-                        <th scope="col">Expected Time</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.workouts.map((workout, index) => (
-                        <tr key={workout.id}>
-                            <th scope="row">
-                                <a href={`/currentwo/${workout.id}`}>{workout.name}</a>
-                            </th>
-                            <td> {workout.total_laps} </td>
-                            <td> {this._getTotalTime(index) + "  "}minutes</td>
-                            <td> <a href={`/edit/${workout.id}`}><img alt='edit' src={edit} /> </a></td>
-                        </tr>
-
-                    ))}
-                </tbody>
-            </table>
+           <WorkoutList workouts={this.state.workouts} totalWorkoutTime={this._getTotalTime} />
         </div>)
     }
 }

@@ -1,8 +1,8 @@
 import React from 'react'
-import { getHistory } from '../actions/actions'
-import TimeAgo from 'react-time-ago'
+import { getHistory } from '../utils/utils'
 import setupTime from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import { WorkoutList } from './WorkoutList';
 
 export class WorkoutHistory extends React.Component{
     constructor(){
@@ -34,26 +34,8 @@ export class WorkoutHistory extends React.Component{
                     </h3>
                 </div>
             </div>
-            <table className='table table-striped'>
-            <thead className="">
-                <tr>
-                    <th scope="col">Workout Name</th>
-                    <th scope="col">When</th>
-                    <th scope="col">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {this.state.history.map((workout, index) => (
-                    <tr key={workout.id}>
-                        <td> {workout.name} </td>
-                        <td>
-                            <TimeAgo locale="en">{ workout.date }</TimeAgo> </td>
-                        <td> {workout.status} </td>
-                    </tr>
 
-                ))}
-            </tbody>
-        </table>
+            <WorkoutList history={this.state.history} historyList={true} />
     </div>
         )
     }
