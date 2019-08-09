@@ -1,11 +1,5 @@
 import React from 'react'
 import { updateWorkout, getWorkout, getTotalExercisesList, removeAndUpdateList } from './../utils/utils.js'
-import logo from "./../images/trash.png"
-import plus from "./../images/plus.png"
-import minus from "./../images/minus.png"
-import wod from "./../images/wod.png"
-import ok from "./../images/check.png"
-import warmup from "./../images/warmup.png"
 
 var localLaps = []
 var localWarmup = {
@@ -35,7 +29,6 @@ export class EditForm extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this._saveWorkout = this._saveWorkout.bind(this)
     this._addExercise = this._addExercise.bind(this)
-    this._fillData = this._fillData.bind(this)
     this._removeExercise = this._removeExercise.bind(this)
     this._minus = this._minus.bind(this)
     this._plus = this._plus.bind(this)
@@ -45,17 +38,21 @@ export class EditForm extends React.Component {
     getWorkout(this.props.id)
       .then(res => {
         const data = res[0]
-        console.log(data)
+        let options = [];
         localLaps = data.laps
         localWarmup = data.warmup
-        let tempList = getTotalExercisesList(data.warmup, data.laps)
+        let tempList = getTotalExercisesList(data.warmup, data.laps);
+        for (let i = 0; i < data.total_laps; i++) {
+          options.push( i + 1 )
+        }
+        console.log(options);
         this.setState({
           workoutName: data.name,
           workoutRest: data.lap_rest,
           totalLaps: data.total_laps,
-          laps: tempList
+          laps: tempList,
+          options
         })
-
       })
   }
 
@@ -104,35 +101,20 @@ export class EditForm extends React.Component {
 
   _plus() {
     this.setState({
+      options: this.state.options.concat(this.state.totalLaps + 1),
       totalLaps: this.state.totalLaps + 1
-    })
+    });
   }
 
   _minus() {
     if (this.state.totalLaps > 0) {
       this.setState({
-        totalLaps: this.state.totalLaps - 1
-      })
+        totalLaps: this.state.totalLaps - 1,
+        options: this.state.options.length === 1 ? [] : this.state.options.slice(0, 1)
+      });
     }
   }
 
-  _fillData(event) {
-    
-    let numbers = () => {
-      let x = []
-      if(this.state.isWarmup){
-        x.push(0)
-      }else{
-      for (var i = 1; i <= this.state.totalLaps; i++) {
-        x.push(i)
-      }}
-      return x
-    }
-    this.setState({
-      options: numbers(),
-      lapNumber: event.target.value
-    })
-  }
   _saveWorkout() {
     let wot = {
       "id": this.props.id,
@@ -236,7 +218,7 @@ export class EditForm extends React.Component {
       return (
         <div className="text-xs-center">
           <h1 className="display-5">Workout has been saved!
-        <img alt='ok' src={ok} />
+        <img alt='ok' src="/images/check.png" />
           </h1>
         </div>
       )
@@ -263,32 +245,31 @@ export class EditForm extends React.Component {
             <div className="mb-3">
               <div className="input-group">
                 <label className="col-md-3">Rest Between Laps :</label>
-                <div className="col-md-6" />
                 <input
                   type="text"
                   pattern="[0-9]*"
-                  className="form-control col-md-3"
+                  className="form-control col-md-2 rounded"
                   placeholder="In seconds"
                   name="workoutRest"
                   value={this.state.workoutRest}
                   onChange={this.handleChange}
                 />
-              </div>
-            </div>
-            <div className="mb-3">
-              <div className="input-group">
-                <label className="col-md-4">Number of Laps :</label>
-                <div className="col-md-5" />
-                <a className="col-md-1" href='#plus' onClick={() => { this._plus() }}>
-                  <img alt="plus" src={plus} />
-                </a>
-                <h2 className="col-md-1">
-                  {this.state.totalLaps}
-                </h2>
-                <a className="col-md-1" href='#minus'
-                  onClick={() => { this._minus() }}>
-                  <img alt="plus" src={minus} />
-                </a>
+                <div className="col-md-1" />
+                <label className="col-md-3">Number of Laps :</label>
+                <div className="mb-3">
+                  <div className="input-group">
+                    <a className="col-md-1" href='#plus' id='plus' onClick={() => { this._plus() }}>
+                      <img alt="plus" src="/images/plus.png" />
+                    </a>
+                    <h2 className="col-md-1" id='lapsLabel'>
+                      {this.state.totalLaps}
+                    </h2>
+                    <a className="col-md-1"  href='#minus' id='minus'
+                      onClick={() => { this._minus() }}>
+                      <img alt="plus" src="/images/minus.png" />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
             <hr />
@@ -301,19 +282,21 @@ export class EditForm extends React.Component {
                   value={this.state.isWarmup}
                   checked={this.state.isWarmup}
                   onChange={this.handleChange}
+                  id="warmupCheck"
                 />
                 <label className="col-md-3 text-primary">
-                  <img alt="warmup" src={warmup} />
+                  <img alt="warmup" src="/images/warmup.png" />
                   This is a warm up
                 </label>
                 <input type="radio"
                   name='isWod'
+                  id='wodCheck'
                   checked={this.state.isWod}
                   value={this.state.isWod}
                   onChange={this.handleChange}
                 />
                 <label className="col-md-3 text-success">
-                  <img alt="wod" src={wod} />
+                  <img alt="wod" src="/images/wod.png" />
                   This is a WOD
                 </label>
               </div>
@@ -369,11 +352,10 @@ export class EditForm extends React.Component {
             <div className="mb-3">
               <div className="input-group">
                 <label className="col-md-3">Lap :</label>
-                <select type="select"
+                <select type="select" className="form-control rounded"
                   name="lapNumber"
                   value={this.state.lapNumber}
-                  onChange={this.handleChange}
-                  onClick={this._fillData} >
+                  onChange={this.handleChange} >
                   <option value="" disabled>Select lap</option>
                   {this.state.options.map((value) => (
                     <option value={value} key={value}> {value} </option>
@@ -426,7 +408,7 @@ export class EditForm extends React.Component {
                           <td> {exercise.url} </td>
                           <td>
                             <a type="submit" href='#remove' onClick={() => { this._removeExercise(exercise.id) }}>
-                              <img alt='trash' src={logo} />
+                              <img alt='trash' src="/images/trash.png" />
                             </a>
                           </td>
                         </tr>

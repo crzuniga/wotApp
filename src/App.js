@@ -1,22 +1,22 @@
-import React, { Component } from 'react'
-import Header from './components/Header'
+import React, { Component } from 'react';
+import Header from './components/Header';
 import MyRoutes from './components/PageRoutes';
-import './css/App.css';
+import './css/app.css';
 
 class App extends Component {
     state = {
-        response: ''
+      response: '',
     };
 
     render() {
-        return (
-            <div className="container">
-                <Header />
-                <p className="App-intro">{this.state.response}</p>
-                < MyRoutes />
-            </div>
-        );
-
+      const { response } = this.state;
+      return (
+        <div className="container main-body">
+          <Header />
+          <p className="App-intro">{response}</p>
+          <MyRoutes />
+        </div>
+      );
     }
 }
 

@@ -1,42 +1,42 @@
-import React from 'react'
-import { getHistory } from '../utils/utils'
-import setupTime from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
-import { WorkoutList } from './WorkoutList';
+import React from 'react';
+import setupTime from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
 
-export class WorkoutHistory extends React.Component{
-    constructor(){
-        super()
-        this.state = {
-            history : []
-        }
-    }
+import { getHistory } from '../utils/utils';
+import WorkoutList from './WorkoutList';
 
-    componentWillMount(){
-        setupTime.locale(en)
-        getHistory()
-        .then(res => {
-           
-            this.setState({ history: res })
-        }
-        )
-        
-    }
+export default class WorkoutHistory extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      history: [],
+    };
+  }
 
-    render(){
-        return(
-            <div className='Container'>
-            <div className="mb-3">
-                <div className="input-group">
-                    <div className="col-md-10" />
-                    <h3>
-                            WOD Logs for me
-                    </h3>
-                </div>
-            </div>
+  componentWillMount() {
+    setupTime.locale(en);
+    getHistory()
+      .then(
+        (res) => {
+          this.setState({ history: res });
+        },
+      );
+  }
 
-            <WorkoutList history={this.state.history} historyList={true} />
-    </div>
-        )
-    }
+  render() {
+    const { history } = this.state;
+    return (
+      <div className="container">
+        <div className="mb-3">
+          <div className="input-group">
+            <div className="col-md-10" />
+            <h3>
+            Logs
+            </h3>
+          </div>
+        </div>
+        <WorkoutList history={history} historyList />
+      </div>
+    );
+  }
 }

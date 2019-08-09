@@ -1,7 +1,6 @@
-import React from 'react'
-import logo from "./../images/trash.png"
+import React from 'react';
 
-export class ExerciseList extends React.Component{
+export default class ExerciseList extends React.Component{
     click = (id) => {
         this.props.onClick(id);
     }
@@ -30,7 +29,7 @@ export class ExerciseList extends React.Component{
                         <td> {exercise.url} </td>
                         <td>
                          <a type="submit" href='#remove' onClick={() => { this.click(exercise.id) }} > 
-                            <img alt='trash' src={logo} />
+                            <img alt='trash' src="/images/trash.png" />
                           </a>
                         </td>
                       </tr>

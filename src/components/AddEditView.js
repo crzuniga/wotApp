@@ -2,14 +2,10 @@ import React from 'react';
 import { AddForm } from './AddForm';
 
 
-export default class AddEditWorkout extends React.Component{
+const AddEditWorkout = () => (
+  <div className="container main-container">
+    <AddForm />
+  </div>
+);
 
-    render(){
-        return(
-            <div className='container'>
-                <AddForm  />
-                
-            </div>
-        )
-    }
-}
+export default AddEditWorkout;

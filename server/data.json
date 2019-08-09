@@ -11,7 +11,7 @@
 			"id": "wup_123461234",
 			"name": "WarmUp",
 			"time": "10",
-			"url": "",
+			"url": "https://www.youtube.com/watch?v=BM2eOqTtS7Q",
 			"finished": "false",
 			"lap": "0"
 		},
@@ -31,7 +31,7 @@
 					"id": "ex_123461234",
 					"name": "Burpees",
 					"time": "10",
-					"url": "",
+					"url": "https://www.youtube.com/watch?v=Uy2nUNX38xE",
 					"finished": "false",
 					"lap": "1"
 				},
@@ -47,7 +47,7 @@
 				{
 					"id": "ex_465798631",
 					"name": "Bicep curls",
-					"url": "",
+					"url": "https://www.youtube.com/watch?v=ykJmrZ5v0Oo",
 					"time": "10",
 					"finished": "false",
 					"lap": "1"
@@ -68,7 +68,7 @@
 				{
 					"id": "ex_478965413",
 					"name": "Push ups",
-					"url": "",
+					"url": "https://www.youtube.com/watch?v=JyCG_5l3XLk",
 					"time": "15",
 					"finished": "false",
 					"lap": "2"

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   addWorkout,
   getTotalExercisesList,
@@ -6,12 +6,8 @@ import {
   addAndUpdateExerciseList
 }
   from './../utils/utils.js'
-import plus from "./../images/plus.png"
-import minus from "./../images/minus.png"
-import wod from "./../images/wod.png"
-import warmup from "./../images/warmup.png"
 import SuccessView from './SucessView.js';
-import { ExerciseList } from './ExerciseList.js';
+import ExerciseList from './ExerciseList.js';
 
 var localLaps = []
 var localWarmup = {
@@ -92,17 +88,20 @@ export class AddForm extends React.Component {
 
   _plus() {
     this.setState({
+      options: this.state.options.concat(this.state.totalLaps + 1),
       totalLaps: this.state.totalLaps + 1
-    })
+    });
   }
 
   _minus() {
     if (this.state.totalLaps > 0) {
       this.setState({
-        totalLaps: this.state.totalLaps - 1
-      })
+        totalLaps: this.state.totalLaps - 1,
+        options: this.state.options.length === 1 ? [] : this.state.options.slice(0, 1)
+      });
     }
   }
+
 
   _fillData(event) {
 
@@ -170,7 +169,7 @@ export class AddForm extends React.Component {
         "lap": this.state.isWod ? this.state.lapNumber : 0
       }
 
-      let exerciseListResult = addAndUpdateExerciseList(ex,rest,localWarmup,localLaps,this.state.isWarmup)
+      let exerciseListResult = addAndUpdateExerciseList(ex, rest, localWarmup, localLaps, this.state.isWarmup)
 
       localWarmup = exerciseListResult[0]
       localLaps = exerciseListResult[1]
@@ -185,17 +184,17 @@ export class AddForm extends React.Component {
   }
 
   _removeExercise(exId) {
-    if(exId!==""){
+    if (exId !== "") {
       let [updatedWarmup, UpdatedLaps] = removeAndUpdateList(exId, localWarmup, localLaps)
       localWarmup = updatedWarmup
       localLaps = UpdatedLaps
       let tempList = getTotalExercisesList(updatedWarmup, UpdatedLaps)
-  
+
       this.setState({
         laps: tempList
       })
     }
-    
+
 
   }
 
@@ -216,7 +215,7 @@ export class AddForm extends React.Component {
                 <input
                   type="text"
                   id="wod"
-                  className="form-control col-md-10 required"
+                  className="form-control col-md-10 required rounded"
                   placeholder="Workout Name"
                   name="workoutName"
                   value={this.state.workoutName}
@@ -227,32 +226,31 @@ export class AddForm extends React.Component {
             <div className="mb-3">
               <div className="input-group">
                 <label className="col-md-3">Rest Between Laps :</label>
-                <div className="col-md-6" />
                 <input
                   type="text"
                   pattern="[0-9]*"
-                  className="form-control col-md-3"
+                  className="form-control col-md-2 rounded"
                   placeholder="In seconds"
                   name="workoutRest"
                   value={this.state.workoutRest}
                   onChange={this.handleChange}
                 />
-              </div>
-            </div>
-            <div className="mb-3">
-              <div className="input-group">
-                <label className="col-md-4">Number of Laps :</label>
-                <div className="col-md-5" />
-                <a className="col-md-1" href='#plus' onClick={() => { this._plus() }}>
-                  <img alt="plus" src={plus} />
-                </a>
-                <h2 className="col-md-1">
-                  {this.state.totalLaps}
-                </h2>
-                <a className="col-md-1" href='#minus'
-                  onClick={() => { this._minus() }}>
-                  <img alt="plus" src={minus} />
-                </a>
+                <div className="col-md-1" />
+                <label className="col-md-3">Number of Laps :</label>
+                <div className="mb-3">
+                  <div className="input-group">
+                    <a className="col-md-1" href='#plus' id='plus' onClick={() => { this._plus() }}>
+                      <img alt="plus" src="/images/plus.png" />
+                    </a>
+                    <h2 className="col-md-1" id='lapsLabel'>
+                      {this.state.totalLaps}
+                    </h2>
+                    <a className="col-md-1"  href='#minus' id='minus'
+                      onClick={() => { this._minus() }}>
+                      <img alt="plus" src="/images/minus.png" />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
             <hr />
@@ -265,19 +263,21 @@ export class AddForm extends React.Component {
                   value={this.state.isWarmup}
                   checked={this.state.isWarmup}
                   onChange={this.handleChange}
+                  id="warmupCheck"
                 />
                 <label className="col-md-3 text-primary">
-                  <img alt="warmup" src={warmup} />
+                  <img alt="warmup" src="/images/warmup.png" />
                   This is a warm up
                 </label>
                 <input type="radio"
                   name='isWod'
+                  id='wodCheck'
                   checked={this.state.isWod}
                   value={this.state.isWod}
                   onChange={this.handleChange}
                 />
                 <label className="col-md-3 text-success">
-                  <img alt="wod" src={wod} />
+                  <img alt="wod" src="/images/wod.png" />
                   This is a WOD
                 </label>
               </div>
@@ -287,7 +287,7 @@ export class AddForm extends React.Component {
                 <label className="col-md-3">Exercise Time :</label>
                 <input
                   type="text"
-                  className="form-control col-md-2"
+                  className="form-control col-md-2 rounded"
                   pattern="[0-9]*"
                   placeholder="In seconds"
                   name="exerciseTime"
@@ -298,7 +298,7 @@ export class AddForm extends React.Component {
                 <label className="col-md-2">Rest Time :</label>
                 <input
                   type="text"
-                  className="form-control col-md-2"
+                  className="form-control col-md-2 rounded"
                   placeholder="In seconds"
                   pattern="[0-9]*"
                   name="exerciseRest"
@@ -312,7 +312,7 @@ export class AddForm extends React.Component {
                 <label className="col-md-3">Exercise Name :</label>
                 <input
                   type="text"
-                  className="form-control col-md-10 "
+                  className="form-control col-md-10 rounded"
                   placeholder="Burpees"
                   name="exerciseName"
                   value={this.state.exerciseName}
@@ -325,7 +325,10 @@ export class AddForm extends React.Component {
                 <label className="col-md-3">Youtube Url :</label>
                 <input
                   type="text"
-                  className="form-control col-md-10 "
+                  name="url"
+                  value={this.state.url}
+                  onChange={this.handleChange}
+                  className="form-control col-md-10 rounded"
                   placeholder="https://www.youtube.com/watch..."
                 />
               </div>
@@ -333,11 +336,10 @@ export class AddForm extends React.Component {
             <div className="mb-3">
               <div className="input-group">
                 <label className="col-md-3">Lap :</label>
-                <select type="select"
+                <select type="select" className="form-control rounded"
                   name="lapNumber"
                   value={this.state.lapNumber}
-                  onChange={this.handleChange}
-                  onClick={this._fillData} >
+                  onChange={this.handleChange} >
                   <option value="" disabled>Select lap</option>
                   {this.state.options.map((value) => (
                     <option value={value} key={value}> {value} </option>
@@ -368,7 +370,7 @@ export class AddForm extends React.Component {
               </div>
             </div>
             <div className="mb-3">
-                  <ExerciseList laps= { this.state.laps } onClick= {this._removeExercise} />
+              <ExerciseList laps={this.state.laps} onClick={this._removeExercise} />
             </div>
           </div>
         </div>

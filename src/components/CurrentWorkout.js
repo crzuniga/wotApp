@@ -1,9 +1,7 @@
 import React from 'react'
 import { getWorkout, saveHistory, getTotalLaps } from './../utils/utils'
 import ReactCountdownClock from 'react-countdown-clock'
-import ReactPlayer from 'react-player'
-import reset from './../images/reset.png'
-import ok from "./../images/check.png"
+import ReactPlayer from 'react-player';
 
 var totalLaps = []
 
@@ -57,13 +55,7 @@ export class CurrentWorkout extends React.Component {
                 })
         }
     }
-    /*
-        componentDidUpdate() {
-            if (data.id === undefined) {
-                data = this.state.workout
-            }
-        }
-    */
+
     _startWorkout() {
         if (this.state.paused && !this.state.started) {
             this.setState({
@@ -197,18 +189,18 @@ export class CurrentWorkout extends React.Component {
                                         <td>
                                             <div className="mb-3">
                                                 Workout Name:
-                                             <h1>{this.state.workout.name} </h1>
                                             </div>
+                                            <h1>{this.state.workout.name} </h1>
                                         </td>
                                         <td>
                                             <div className="mb-3">
                                                 <div className="input-group">
                                                     <div />
-                                                    <label className="font-weight-light ">Current Lap: </label>
+                                                    <label className="font-weight-light exercise-left">Current Lap: </label>
                                                     <h3 className="col-md-1"> {this.state.lap}</h3>
                                                 </div>
                                             </div>
-                                            <div className="mb-3">
+                                            <div className="mb-3 exercise-left">
                                                 <h2> {this.state.exerciseName}</h2>
                                             </div>
                                         </td>
@@ -233,11 +225,7 @@ export class CurrentWorkout extends React.Component {
 
                                         </td>
                                         <td rowSpan='3' className='' >
-                                            <div className="mb-6">
-                                                <video id="background-video" loop autoPlay>
-                                                    <source src="https://as02.epimg.net/videos/videos/2018/06/10/portada/1528651537_889241_1528651550.mp4" type="video/mp4" />
-                                                </video>
-
+                                            <div className="mb-6 video-div exercise-left">
                                                 <ReactPlayer
                                                     className='video-box'
                                                     url={this.state.url}
@@ -255,14 +243,14 @@ export class CurrentWorkout extends React.Component {
                                                 onClick={this._startWorkout}
                                                 hidden={this.state.started}
                                             > ►
-                                                            Start Workout
+                                                                Start Workout
                                                 </button>
                                             <button className='btn btn-lg btn-outline-primary'
                                                 type='button'
                                                 hidden={!this.state.started}
                                                 onClick={this._resetWorkout}
                                             >
-                                                <img alt='reset' src={reset} />
+                                                <img alt='reset' src="/images/reset.png" />
                                                 Restart Workout</button>
 
                                         </td>
@@ -290,16 +278,12 @@ export class CurrentWorkout extends React.Component {
                 return (
                     <div className="text-xs-center">
                         <h1 className="display-5">Workout has been Completed!
-                    <img alt='ok' src={ok} />
+                    <img alt='ok' src='/images/check.png' />
                         </h1>
                     </div>
                 )
             }
-
         }
-
-
-
     }
 }
 
